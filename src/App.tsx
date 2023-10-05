@@ -97,7 +97,9 @@ export function App() {
 
         <div className="RampGrid">
           <Transactions
-            transactions={isLoading ? null : transactionsState.data}
+            transactions={
+              !transactionsState.data?.length ? null : transactionsState.data
+            }
           />
 
           {transactions !== null &&
