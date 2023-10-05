@@ -14,7 +14,6 @@ export function App() {
     usePaginatedTransactions();
   const { data: transactionsByEmployee, ...transactionsByEmployeeUtils } =
     useTransactionsByEmployee();
-  const [isLoading, setIsLoading] = useState(false);
   const [transactionsState, setTransactionsState] = useState<{
     data: Transaction[] | null;
     employeeId: string | null;
@@ -33,28 +32,21 @@ export function App() {
   }, [transactions]);
 
   const loadAllTransactions = useCallback(async () => {
-    setIsLoading(true);
     transactionsByEmployeeUtils.invalidateData();
     transactionsState.employeeId &&
       setTransactionsState({ data: null, employeeId: null });
 
     await employeeUtils.fetchAll();
     await paginatedTransactionsUtils.fetchAll();
-
-    setIsLoading(false);
   }, [employeeUtils, paginatedTransactionsUtils, transactionsByEmployeeUtils]);
 
   const loadTransactionsByEmployee = useCallback(
     async (employeeId: string) => {
-      setIsLoading(true);
-
       employeeId !== transactionsState.employeeId &&
         setTransactionsState({ data: null, employeeId });
 
       paginatedTransactionsUtils.invalidateData();
       await transactionsByEmployeeUtils.fetchById(employeeId);
-
-      setIsLoading(false);
     },
     [paginatedTransactionsUtils, transactionsByEmployeeUtils]
   );
